@@ -13,7 +13,7 @@ export class RecipeService {
   public recipeSelected = new EventEmitter<Recipe>();
 
   get recipes(): Recipe[] {
-    return this.prRecipes;
+    return this.prRecipes.slice();
   }
 
   constructor() {
