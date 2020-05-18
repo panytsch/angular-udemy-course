@@ -18,7 +18,12 @@ export class ShoppingListService {
 
   public addIngredient(ingredient: Ingredient): void {
     this.prIngredients.push(ingredient);
-    this.ingredientsChanged.emit(this.prIngredients);
+    this.ingredientsChanged.emit(this.ingredients);
+  }
+
+  public addIngredients(ingredients: Ingredient[]): void {
+    this.prIngredients = [...this.prIngredients, ...ingredients];
+    this.ingredientsChanged.emit(this.ingredients);
   }
 
   constructor() {
