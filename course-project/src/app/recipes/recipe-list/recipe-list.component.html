@@ -5,8 +5,13 @@
 </div>
 <hr>
 <div class="row">
-  <div class="col-xs-12 pointer" *ngFor="let recipe of recipes; index as i" (click)="navigateToRecipe(i)">
+  <div
+    class="col-xs-12"
+    *ngFor="let recipe of recipes; index as i"
+  >
     <app-recipe-item
+      class="pointer"
+      [index]="i"
       [recipe]="recipe"
     ></app-recipe-item>
   </div>

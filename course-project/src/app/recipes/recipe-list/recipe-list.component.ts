@@ -1,8 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Recipe} from '../recipe.model';
 import {RecipeService} from '../recipe.service';
-import {Router} from '@angular/router';
-import {SelectedRecipeRoute} from '../../routing/routes/recipe';
 
 @Component({
   selector: 'app-recipe-list',
@@ -10,17 +8,12 @@ import {SelectedRecipeRoute} from '../../routing/routes/recipe';
   styleUrls: ['./recipe-list.component.css']
 })
 export class RecipeListComponent implements OnInit {
-  recipes: Recipe[];
 
-  constructor(private recipeService: RecipeService,
-              private router: Router) {
+  constructor(private recipeService: RecipeService) {
   }
+  recipes: Recipe[];
 
   ngOnInit(): void {
     this.recipes = this.recipeService.recipes;
-  }
-
-  navigateToRecipe(id: number): void {
-    this.router.navigateByUrl(SelectedRecipeRoute.getLink(id));
   }
 }
