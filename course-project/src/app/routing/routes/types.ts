@@ -9,6 +9,8 @@ export enum StaticRoutesEnum {
   Recipe = '/recipes',
   RecipeNoSelected = '/recipes',
   RecipeSelected = '/recipes/:id',
+  RecipeEdit = '/recipes/:id/edit',
+  RecipeNew = '/recipes/new',
   ShoppingList = '/shopping-list'
 }
 

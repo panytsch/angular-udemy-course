@@ -13,6 +13,7 @@ import {FormsModule} from '@angular/forms';
 import {DropdownDirective} from './shared/directives/dropdown.directive';
 import {AppRoutingModule} from './routing/app-routing.module';
 import { NoSelectedRecipesComponent } from './recipes/no-selected-recipes/no-selected-recipes.component';
+import { RecipeEditComponent } from './recipes/recipe-edit/recipe-edit.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { NoSelectedRecipesComponent } from './recipes/no-selected-recipes/no-sel
     ShoppingListComponent,
     ShoppingEditComponent,
     DropdownDirective,
-    NoSelectedRecipesComponent
+    NoSelectedRecipesComponent,
+    RecipeEditComponent
   ],
   imports: [
     BrowserModule,
