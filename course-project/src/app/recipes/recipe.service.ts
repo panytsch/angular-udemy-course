@@ -35,6 +35,10 @@ export class RecipeService {
     return this.prRecipes.slice();
   }
 
+  public getRecipeById(id: number): Recipe | null {
+    return this.recipes[id] || null;
+  }
+
   constructor() {
   }
 }

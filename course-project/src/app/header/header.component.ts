@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {RoutesEnum} from '../routing/routes/types';
+import {StaticRoutesEnum} from '../routing/routes/types';
 
 @Component({
   selector: 'app-header',
@@ -7,7 +7,7 @@ import {RoutesEnum} from '../routing/routes/types';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit {
-  routes = RoutesEnum;
+  routes = StaticRoutesEnum;
 
   constructor() {
   }

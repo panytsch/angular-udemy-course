@@ -5,7 +5,7 @@
 </div>
 <hr>
 <div class="row">
-  <div class="col-xs-12" *ngFor="let recipe of recipes">
+  <div class="col-xs-12 pointer" *ngFor="let recipe of recipes; index as i" (click)="navigateToRecipe(i)">
     <app-recipe-item
       [recipe]="recipe"
     ></app-recipe-item>
