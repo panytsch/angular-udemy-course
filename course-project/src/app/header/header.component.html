@@ -1,16 +1,16 @@
 <nav class="navbar navbar-default">
   <div class="container-fluid">
     <div class="navbar-header">
-      <a href="#" class="navbar-brand">Recipe book</a>
+      <a [routerLink]="routes.App" class="navbar-brand">Recipe book</a>
     </div>
 
     <div class="collapse navbar-collapse">
       <ul class="nav navbar-nav">
         <li>
-          <a href="#" (click)="onSelect(selectTypes.Recipe)">Recipes</a>
+          <a [routerLink]="routes.Recipe">Recipes</a>
         </li>
         <li>
-          <a href="#" (click)="onSelect(selectTypes.ShoppingList)">Shopping list</a>
+          <a [routerLink]="routes.ShoppingList">Shopping list</a>
         </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
