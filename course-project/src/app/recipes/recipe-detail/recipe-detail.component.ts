@@ -12,6 +12,7 @@ import {StaticRoutesEnum} from '../../routing/routes/types';
 })
 export class RecipeDetailComponent implements OnInit {
   recipe: Recipe;
+  id: number;
 
   constructor(private shoppingListService: ShoppingListService,
               private recipeService: RecipeService,
@@ -20,13 +21,6 @@ export class RecipeDetailComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const id = +this.route.snapshot.params.id;
-    const recipe = this.recipeService.getRecipeById(id);
-    if (!recipe) {
-      this.router.navigateByUrl(StaticRoutesEnum.Recipe);
-      return;
-    }
-    this.recipe = recipe;
     this.route.params.subscribe(this.loadNext);
   }
 
@@ -36,6 +30,7 @@ export class RecipeDetailComponent implements OnInit {
       this.router.navigateByUrl(StaticRoutesEnum.Recipe);
       return;
     }
+    this.id = +params.id;
     this.recipe = recipe;
   }
 
