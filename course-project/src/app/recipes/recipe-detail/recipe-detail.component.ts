@@ -4,6 +4,7 @@ import {ShoppingListService} from '../../shopping-list/shopping-list.service';
 import {RecipeService} from '../recipe.service';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {StaticRoutesEnum} from '../../routing/routes/types';
+import {EditRecipeRoute} from '../../routing/routes/recipe';
 
 @Component({
   selector: 'app-recipe-detail',
@@ -13,6 +14,7 @@ import {StaticRoutesEnum} from '../../routing/routes/types';
 export class RecipeDetailComponent implements OnInit {
   recipe: Recipe;
   id: number;
+  editRecipeLink: string;
 
   constructor(private shoppingListService: ShoppingListService,
               private recipeService: RecipeService,
@@ -32,6 +34,7 @@ export class RecipeDetailComponent implements OnInit {
     }
     this.id = +params.id;
     this.recipe = recipe;
+    this.editRecipeLink = EditRecipeRoute.getLink(this.id);
   }
 
   toShoppingList(): void {

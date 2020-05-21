@@ -44,7 +44,7 @@ export class NewRecipeRoute implements IAppRoute {
 }
 
 export class EditRecipeRoute implements IAppRoute {
-  static getLink = (): string => StaticRoutesEnum.RecipeEdit;
+  static getLink = (id: number): string => StaticRoutesEnum.RecipeEdit.replace(':id', id.toString());
 
   getRoute = (): Route => ({
     path: getRouterPathFromParentRouteEnum(StaticRoutesEnum.RecipeEdit, StaticRoutesEnum.Recipe),
