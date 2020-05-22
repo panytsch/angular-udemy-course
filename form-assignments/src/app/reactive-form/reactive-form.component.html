@@ -1,0 +1,45 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div class="form-group">
+    <label for="projectName">Project name</label>
+    <input
+      type="text"
+      id="projectName"
+      name="projectName"
+      class="form-control"
+      formControlName="projectName">
+    <span *ngIf="form.get('projectName').errors">
+      <span class="help-block" *ngIf="form.get('projectName').errors['required'] && form.get('projectName').touched">Mandatory field</span>
+      <span class="help-block" *ngIf="form.get('projectName').errors['forbiddenName'] && form.get('projectName').touched">Name is forbidden</span>
+    </span>
+  </div>
+  <div class="form-group">
+    <label for="email">Email</label>
+    <input
+      type="email"
+      id="email"
+      name="email"
+      class="form-control"
+      formControlName="email">
+    <span class="help-block" *ngIf="!form.get('email').valid && form.get('email').touched">Must be an email</span>
+  </div>
+  <div class="form-group">
+    <label for="projectStatus">Project status</label>
+    <select
+      name="projectStatus"
+      id="projectStatus"
+      formControlName="projectStatus"
+      class="form-control">
+      <option
+        *ngFor="let status of projectStatuses"
+        [value]="status">
+        {{status}}
+      </option>
+    </select>
+  </div>
+  <button type="submit" class="btn btn-success">Submit</button>
+</form>
+<div *ngIf="result">
+  <hr>
+  <h3>Result</h3>
+  <pre>{{result}}</pre>
+</div>
