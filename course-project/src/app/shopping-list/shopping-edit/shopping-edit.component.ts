@@ -33,7 +33,7 @@ export class ShoppingEditComponent implements OnInit, OnDestroy {
     }
     this.ingredientIndex = index;
     this.isEditMode = true;
-    this.form.patchValue({
+    this.form.setValue({
       name: ingredient.name,
       amount: ingredient.amount
     });
@@ -45,7 +45,7 @@ export class ShoppingEditComponent implements OnInit, OnDestroy {
 
   validateAmount = (control: FormControl) => control.value > 0 ? null : {lowValue: true};
 
-  onIngredientAdd = (): void => {
+  onSubmit = (): void => {
     if (this.form.invalid) {
       return;
     }

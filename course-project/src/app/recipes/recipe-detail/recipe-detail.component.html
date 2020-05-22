@@ -19,7 +19,7 @@
         <li>
           <a class="pointer" (click)="toShoppingList()">To shopping list</a>
           <a class="pointer" [routerLink]="editRecipeLink">Edit Recipe</a>
-          <a class="pointer">Delete Recipe</a>
+          <a class="pointer" (click)="onDelete()">Delete Recipe</a>
         </li>
       </ul>
     </div>

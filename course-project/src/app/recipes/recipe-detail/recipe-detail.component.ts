@@ -4,7 +4,7 @@ import {ShoppingListService} from '../../shopping-list/shopping-list.service';
 import {RecipeService} from '../recipe.service';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {StaticRoutesEnum} from '../../routing/routes/types';
-import {EditRecipeRoute} from '../../routing/routes/recipe';
+import {EditRecipeRoute, RecipeRoute} from '../../routing/routes/recipe';
 
 @Component({
   selector: 'app-recipe-detail',
@@ -39,5 +39,10 @@ export class RecipeDetailComponent implements OnInit {
 
   toShoppingList(): void {
     this.shoppingListService.addIngredients(this.recipe.ingredients);
+  }
+
+  onDelete(): void {
+    this.recipeService.deleteRecipe(this.id);
+    this.router.navigateByUrl(RecipeRoute.getLink());
   }
 }

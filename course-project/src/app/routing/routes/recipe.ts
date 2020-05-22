@@ -6,6 +6,8 @@ import {RecipeDetailComponent} from '../../recipes/recipe-detail/recipe-detail.c
 import {RecipeEditComponent} from '../../recipes/recipe-edit/recipe-edit.component';
 
 export class RecipeRoute implements IAppRoute {
+  static getLink = (): string => StaticRoutesEnum.Recipe;
+
   getRoute = (): Route => ({
     path: getRouterPathFromRouteEnum(StaticRoutesEnum.Recipe),
     component: RecipesComponent,
