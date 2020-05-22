@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Ingredient} from '../../shared/ingredient.model';
 import {ShoppingListService} from '../shopping-list.service';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
 
 @Component({
   selector: 'app-shopping-edit',
@@ -8,30 +9,25 @@ import {ShoppingListService} from '../shopping-list.service';
   styleUrls: ['./shopping-edit.component.css']
 })
 export class ShoppingEditComponent implements OnInit {
-  ingredient: Ingredient;
+  form: FormGroup;
 
   constructor(private shoppingListService: ShoppingListService) {
-    this.clearIngredient();
   }
 
   ngOnInit(): void {
+    this.form = new FormGroup({
+      name: new FormControl(null, Validators.required),
+      amount: new FormControl(null, this.validateAmount),
+    });
   }
+
+  validateAmount = (control: FormControl) => control.value > 0 ? null : {lowValue: true};
 
   onIngredientAdd = (): void => {
-    if (!this.isIngredientValid()) {
+    if (this.form.invalid) {
       return;
     }
-    this.shoppingListService.addIngredient(this.ingredient);
-    this.clearIngredient();
-  }
-
-  onIngredientClear = (): void => {
-    this.clearIngredient();
-  }
-
-  isIngredientValid = (): boolean => !!(this.ingredient.amount && this.ingredient.name);
-
-  private clearIngredient = (): void => {
-    this.ingredient = new Ingredient('', 0);
+    this.shoppingListService.addIngredient(new Ingredient(this.form.value.name, this.form.value.amount));
+    this.form.reset();
   }
 }
