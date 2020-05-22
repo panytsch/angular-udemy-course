@@ -30,12 +30,18 @@
             class="btn btn-success"
             [disabled]="form.invalid"
             type="submit"
-          >Add</button>
-          <button class="btn btn-danger">Delete</button>
+          >{{ isEditMode ? 'Edit' : 'Add'}}</button>
           <button
+            type="button"
+            [disabled]="ingredientIndex === null"
+            (click)="onDelete()"
+            class="btn btn-danger">Delete</button>
+          <button
+            type="button"
             class="btn btn-primary"
             (click)="form.reset()"
-          >Clear</button>
+          >Clear
+          </button>
         </div>
       </div>
     </form>
