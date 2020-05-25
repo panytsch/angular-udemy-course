@@ -4,6 +4,7 @@ import {RecipesComponent} from '../../recipes/recipes.component';
 import {NoSelectedRecipesComponent} from '../../recipes/no-selected-recipes/no-selected-recipes.component';
 import {RecipeDetailComponent} from '../../recipes/recipe-detail/recipe-detail.component';
 import {RecipeEditComponent} from '../../recipes/recipe-edit/recipe-edit.component';
+import {RecipesResolverService} from '../../recipes/recipes-resolver.service';
 
 export class RecipeRoute implements IAppRoute {
   static getLink = (): string => StaticRoutesEnum.Recipe;
@@ -16,7 +17,8 @@ export class RecipeRoute implements IAppRoute {
       (new EditRecipeRoute()).getRoute(),
       (new NewRecipeRoute()).getRoute(),
       (new SelectedRecipeRoute()).getRoute(),
-    ]
+    ],
+    resolve: [RecipesResolverService]
   })
 }
 
