@@ -1,3 +1,6 @@
+import {variables} from './variables';
+
 export const environment = {
-  production: true
+  production: true,
+  firebaseKey: variables.firebaseKey
 };
