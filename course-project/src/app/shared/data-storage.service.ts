@@ -4,6 +4,7 @@ import {Recipe} from '../recipes/recipe.model';
 import {RecipeService} from '../recipes/recipe.service';
 import {map, tap} from 'rxjs/operators';
 import {Observable} from 'rxjs';
+import {AuthService} from '../auth/auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +23,8 @@ export class DataStorageService {
   }
 
   public fetchRecipes(): Observable<Recipe[]> {
-    return this.http.get<Recipe[]>(this.recipesUrl)
+    return this.http
+      .get<Recipe[]>(this.recipesUrl)
       .pipe(
         map(recipes => recipes.map(recipe => ({
           ...recipe,

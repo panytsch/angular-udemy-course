@@ -1,7 +1,9 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {AuthResponseData, AuthService} from './auth.service';
+import {SingUpResponseData, AuthService} from './auth.service';
 import {Subscription} from 'rxjs';
+import {Router} from '@angular/router';
+import {StaticRoutesEnum} from '../routing/routes/types';
 
 @Component({
   selector: 'app-auth',
@@ -15,7 +17,8 @@ export class AuthComponent implements OnInit, OnDestroy {
   processing = false;
   error = '';
 
-  constructor(private authService: AuthService) {
+  constructor(private authService: AuthService,
+              private router: Router) {
   }
 
   ngOnInit(): void {
@@ -38,17 +41,18 @@ export class AuthComponent implements OnInit, OnDestroy {
       return;
     }
     this.processing = true;
-    if (this.isLoginMode) {
-      return;
-    }
     const {email, password} = this.form.value;
-    this.subs.push(this.authService.signUp(email, password).subscribe(this.authSuccess, this.authFail));
+    if (this.isLoginMode) {
+      this.subs.push(this.authService.login(email, password).subscribe(this.authSuccess, this.authFail));
+    } else {
+      this.subs.push(this.authService.signUp(email, password).subscribe(this.authSuccess, this.authFail));
+    }
     this.form.reset();
   }
 
-  private authSuccess = (res: AuthResponseData): void => {
+  private authSuccess = (): void => {
     this.processing = false;
-    console.log(res);
+    this.router.navigateByUrl(StaticRoutesEnum.Recipe);
   }
 
   private authFail = (err: string): void => {
