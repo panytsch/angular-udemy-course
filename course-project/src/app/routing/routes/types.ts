@@ -11,7 +11,8 @@ export enum StaticRoutesEnum {
   RecipeSelected = '/recipes/:id',
   RecipeEdit = '/recipes/:id/edit',
   RecipeNew = '/recipes/new',
-  ShoppingList = '/shopping-list'
+  ShoppingList = '/shopping-list',
+  Auth = '/auth'
 }
 
 export const getRouterPathFromRouteEnum = (route: StaticRoutesEnum): string => route.substr(1);

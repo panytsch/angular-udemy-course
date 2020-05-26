@@ -4,11 +4,13 @@ import {RouterModule, Routes} from '@angular/router';
 import {RecipeRoute} from './routes/recipe';
 import {ShoppingListRoute} from './routes/shopping-list';
 import {AppRoute} from './routes/app';
+import {AuthRoute} from './routes/auth';
 
 const appRoutes: Routes = [
-  (new AppRoute()).getRoute(),
-  (new RecipeRoute()).getRoute(),
-  (new ShoppingListRoute()).getRoute(),
+  new AppRoute().getRoute(),
+  new RecipeRoute().getRoute(),
+  new ShoppingListRoute().getRoute(),
+  new AuthRoute().getRoute()
 ];
 
 @NgModule({
