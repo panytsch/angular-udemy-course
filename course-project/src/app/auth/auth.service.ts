@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse, HttpParams} from '@angular/common/http';
 import {environment} from '../../environments/environment';
-import {BehaviorSubject, Observable, Subject, throwError} from 'rxjs';
+import {BehaviorSubject, Observable, throwError} from 'rxjs';
 import {catchError, tap} from 'rxjs/operators';
 import {User} from './user.model';
 import {Router} from '@angular/router';
@@ -58,13 +58,14 @@ export class AuthService {
 
   public autoLogin(): void {
     const loadedUser = this.getSavedUser();
-    if (!loadedUser.token) {
+    if (!loadedUser || !loadedUser.token) {
       return;
     }
     this.userUpdated.next(loadedUser);
     this.autoLogout(loadedUser.tokenExpirationDate.getTime() - new Date().getTime());
   }
 
+  // noinspection JSMethodCanBeStatic
   private getSavedUser(): User | null {
     const userData = JSON.parse(localStorage.getItem('userData'));
     if (!userData) {
@@ -74,10 +75,11 @@ export class AuthService {
       userData.email,
       userData.id,
       userData._token,
-      new Date(userData.__tokenExpirationDate)
+      new Date(userData._tokenExpirationDate)
     );
   }
 
+  // noinspection JSMethodCanBeStatic
   private saveUser(user?: User): void {
     localStorage.setItem('userData', JSON.stringify(user));
   }

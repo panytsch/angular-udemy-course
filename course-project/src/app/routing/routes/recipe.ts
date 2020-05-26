@@ -5,6 +5,7 @@ import {NoSelectedRecipesComponent} from '../../recipes/no-selected-recipes/no-s
 import {RecipeDetailComponent} from '../../recipes/recipe-detail/recipe-detail.component';
 import {RecipeEditComponent} from '../../recipes/recipe-edit/recipe-edit.component';
 import {RecipesResolverService} from '../../recipes/recipes-resolver.service';
+import {AuthGuard} from '../../auth/auth.guard';
 
 export class RecipeRoute implements IAppRoute {
   static getLink = (): string => StaticRoutesEnum.Recipe;
@@ -12,6 +13,7 @@ export class RecipeRoute implements IAppRoute {
   getRoute = (): Route => ({
     path: getRouterPathFromRouteEnum(StaticRoutesEnum.Recipe),
     component: RecipesComponent,
+    canActivate: [AuthGuard],
     children: [
       (new NoSelectedRecipeRoute()).getRoute(),
       (new EditRecipeRoute()).getRoute(),
