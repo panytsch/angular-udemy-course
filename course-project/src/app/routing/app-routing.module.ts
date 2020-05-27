@@ -8,6 +8,14 @@ const appRoutes: Routes = [
   {
     path: getRouterPathFromRouteEnum(StaticRoutesEnum.Recipe),
     loadChildren: () => import('./../recipes/recipes.module').then(m => m.RecipesModule)
+  },
+  {
+    path: getRouterPathFromRouteEnum(StaticRoutesEnum.ShoppingList),
+    loadChildren: () => import('./../shopping-list/shopping-list.module').then(m => m.ShoppingListModule)
+  },
+  {
+    path: getRouterPathFromRouteEnum(StaticRoutesEnum.Auth),
+    loadChildren: () => import('./../auth/auth.module').then(m => m.AuthModule)
   }
 ];
 
