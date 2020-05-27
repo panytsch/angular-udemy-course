@@ -3,6 +3,7 @@ import {AuthComponent} from './auth.component';
 import {ReactiveFormsModule} from '@angular/forms';
 import {SharedModule} from '../shared/shared.module';
 import {RouterModule} from '@angular/router';
+import {AuthRoute} from '../routing/routes/auth';
 
 @NgModule({
   declarations: [
@@ -10,7 +11,7 @@ import {RouterModule} from '@angular/router';
   ],
   imports: [
     ReactiveFormsModule,
-    RouterModule,
+    RouterModule.forChild([new AuthRoute().getRoute()]),
     SharedModule
   ]
 })

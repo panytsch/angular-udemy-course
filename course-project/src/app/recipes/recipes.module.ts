@@ -8,6 +8,7 @@ import {ReactiveFormsModule} from '@angular/forms';
 import {RouterModule} from '@angular/router';
 import {NoSelectedRecipesComponent} from './no-selected-recipes/no-selected-recipes.component';
 import {SharedModule} from '../shared/shared.module';
+import {RecipeRoute} from '../routing/routes/recipe';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,7 @@ import {SharedModule} from '../shared/shared.module';
     RecipesComponent,
   ],
   imports: [
-    RouterModule,
+    RouterModule.forChild([new RecipeRoute().getRoute()]),
     SharedModule,
     ReactiveFormsModule
   ]
