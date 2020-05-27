@@ -1,4 +1,4 @@
-import {getRouterPathFromParentRouteEnum, getRouterPathFromRouteEnum, IAppRoute, StaticRoutesEnum} from './types';
+import {getRouterPathFromParentRouteEnum, IAppRoute, StaticRoutesEnum} from './types';
 import {Route} from '@angular/router';
 import {RecipesComponent} from '../../recipes/recipes.component';
 import {NoSelectedRecipesComponent} from '../../recipes/no-selected-recipes/no-selected-recipes.component';
@@ -11,14 +11,14 @@ export class RecipeRoute implements IAppRoute {
   static getLink = (): string => StaticRoutesEnum.Recipe;
 
   getRoute = (): Route => ({
-    path: getRouterPathFromRouteEnum(StaticRoutesEnum.Recipe),
+    path: '',
     component: RecipesComponent,
     canActivate: [AuthGuard],
     children: [
-      (new NoSelectedRecipeRoute()).getRoute(),
-      (new EditRecipeRoute()).getRoute(),
-      (new NewRecipeRoute()).getRoute(),
-      (new SelectedRecipeRoute()).getRoute(),
+      new NoSelectedRecipeRoute().getRoute(),
+      new EditRecipeRoute().getRoute(),
+      new NewRecipeRoute().getRoute(),
+      new SelectedRecipeRoute().getRoute(),
     ],
     resolve: [RecipesResolverService]
   })
