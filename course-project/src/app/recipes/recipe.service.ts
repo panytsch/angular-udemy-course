@@ -8,38 +8,13 @@ import {Subject} from 'rxjs';
 export class RecipeService {
   recipesUpdated = new Subject<Recipe[]>();
 
-  private prRecipes: Recipe[] = [];
-
-  /*
-  private prRecipes: Recipe[] = [
-    new Recipe(
-      'burger big',
-      'mac',
-      'https://i3.stat01.com/2/745/107442723/a35910/doski-dlya-burgerov.jpg',
-      [
-        new Ingredient('meat', 2),
-        new Ingredient('bread', 3),
-        new Ingredient('onion', 1),
-        new Ingredient('cheese', 2),
-      ]
-    ),
-    new Recipe(
-      'burger small',
-      'small mac burger',
-      'https://i3.stat01.com/2/745/107442743/a35910/podnosy-dlya-burgerov.jpg',
-      [
-        new Ingredient('meat', 1),
-        new Ingredient('bread', 1),
-      ]
-    ),
-  ];
-  */
+  private _recipes: Recipe[] = [];
 
   constructor() {
   }
 
   get recipes(): Recipe[] {
-    return this.prRecipes.slice();
+    return this._recipes.slice();
   }
 
   public getRecipeById(id: number): Recipe | null {
@@ -47,26 +22,27 @@ export class RecipeService {
   }
 
   public addRecipe(rec: Recipe): void {
-    this.prRecipes.push(rec);
+    this._recipes.push(rec);
     this.triggerUpdateRecipes();
   }
 
   public updateRecipe(index: number, rec: Recipe): void {
-    this.prRecipes[index] = rec;
+    this._recipes[index] = rec;
     this.triggerUpdateRecipes();
   }
 
   public deleteRecipe(index: number): void {
-    this.prRecipes.splice(index, 1);
+    this._recipes.splice(index, 1);
     this.triggerUpdateRecipes();
   }
 
   public setRecipes(recipes: Recipe[]): void {
-    this.prRecipes = recipes;
+    this._recipes = recipes;
     this.recipesUpdated.next(this.recipes);
   }
 
   private triggerUpdateRecipes() {
+    console.log(this._recipes);
     this.recipesUpdated.next(this.recipes);
   }
 }

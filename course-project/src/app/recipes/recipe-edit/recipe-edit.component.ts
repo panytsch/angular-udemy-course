@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Params, Router} from '@angular/router';
-import {AbstractControl, FormArray, FormControl, FormGroup, Validators} from '@angular/forms';
+import {FormArray, FormControl, FormGroup, Validators} from '@angular/forms';
 import {RecipeService} from '../recipe.service';
 import {Recipe} from '../recipe.model';
 import {Ingredient} from '../../shared/ingredient.model';
@@ -26,8 +26,8 @@ export class RecipeEditComponent implements OnInit {
     this.route.params.subscribe(this.nextLoad);
   }
 
-  get controls(): AbstractControl[] {
-    return (this.form.get('ingredients') as FormArray).controls;
+  get controls(): FormArray {
+    return (this.form.get('ingredients') as FormArray);
   }
 
   private nextLoad = (params: Params): void => {
@@ -77,7 +77,7 @@ export class RecipeEditComponent implements OnInit {
   })
 
   onRemoveIngredient(index: number): void {
-    this.controls.splice(index, 1);
+    this.controls.removeAt(index);
   }
 
   redirectToRecipe(toList: boolean): void {
