@@ -1,9 +1,11 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, ComponentFactoryResolver, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {SingUpResponseData, AuthService} from './auth.service';
+import {AuthService} from './auth.service';
 import {Subscription} from 'rxjs';
 import {Router} from '@angular/router';
 import {StaticRoutesEnum} from '../routing/routes/types';
+import {AlertComponent} from '../shared/alert/alert.component';
+import {PlaceholderDirective} from '../shared/placeholder.directive';
 
 @Component({
   selector: 'app-auth',
@@ -16,9 +18,13 @@ export class AuthComponent implements OnInit, OnDestroy {
   form: FormGroup;
   processing = false;
   error = '';
+  @ViewChild(PlaceholderDirective, {static: false})
+  alertHost: PlaceholderDirective;
+
 
   constructor(private authService: AuthService,
-              private router: Router) {
+              private router: Router,
+              private componentFactoryResolver: ComponentFactoryResolver) {
   }
 
   ngOnInit(): void {
@@ -58,5 +64,22 @@ export class AuthComponent implements OnInit, OnDestroy {
   private authFail = (err: string): void => {
     this.processing = false;
     this.error = err;
+    this.showErrorAlert(err);
+  }
+
+  onCloseAlert = () => {
+    this.error = '';
+  }
+
+  private showErrorAlert(message: string): void {
+    const alertCmpFactory = this.componentFactoryResolver.resolveComponentFactory(AlertComponent);
+    const hostViewContRef = this.alertHost.viewContainerRef;
+    hostViewContRef.clear();
+    const alertComp = hostViewContRef.createComponent<AlertComponent>(alertCmpFactory);
+    alertComp.instance.message = message;
+    this.subs.push(alertComp.instance.closeEvent.subscribe(() => {
+      this.onCloseAlert();
+      hostViewContRef.clear();
+    }));
   }
 }

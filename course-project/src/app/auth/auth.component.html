@@ -1,8 +1,10 @@
+<ng-template appPlaceholder></ng-template>
 <div class="row">
   <div class="col-xs-12 col-md-6 col-md-offset-3">
-    <div class="alert alert-danger" *ngIf="error">{{error}}</div>
+<!--    <div class="alert alert-danger" *ngIf="error">{{error}}</div>-->
+<!--    <app-alert [message]="error" *ngIf="error"></app-alert>-->
     <div class="text-center" *ngIf="processing">
-      <app-loading-spinner></app-loading-spinner>
+      <app-loading-spinner (close)="onCloseAlert()"></app-loading-spinner>
     </div>
     <form [formGroup]="form" (ngSubmit)="onSubmit()" *ngIf="!processing">
       <div class="form-group">
