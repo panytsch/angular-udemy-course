@@ -3,6 +3,9 @@ import {Ingredient} from '../../shared/ingredient.model';
 import {ShoppingListService} from '../shopping-list.service';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {Subscription} from 'rxjs';
+import {Store} from '@ngrx/store';
+import {IAppStore} from '../../store';
+import {AddIngredientAction} from '../store/shopping-list.actions';
 
 @Component({
   selector: 'app-shopping-edit',
@@ -15,7 +18,8 @@ export class ShoppingEditComponent implements OnInit, OnDestroy {
   form: FormGroup;
   isEditMode = false;
 
-  constructor(private shoppingListService: ShoppingListService) {
+  constructor(private shoppingListService: ShoppingListService,
+              private store: Store<IAppStore>) {
   }
 
   ngOnInit(): void {
@@ -53,7 +57,8 @@ export class ShoppingEditComponent implements OnInit, OnDestroy {
     if (this.isEditMode) {
       this.shoppingListService.patchIngredient(this.ingredientIndex, ingredient);
     } else {
-      this.shoppingListService.addIngredient(ingredient);
+      this.store.dispatch(new AddIngredientAction(ingredient));
+      // this.shoppingListService.addIngredient(ingredient);
     }
     this.onClear();
   }
