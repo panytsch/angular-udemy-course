@@ -4,6 +4,6 @@ export class AppReducers {
   shoppingList = shoppingListReducer;
 }
 
-export interface IAppStore {
+export interface IAppState {
   shoppingList: IShoppingListState;
 }
