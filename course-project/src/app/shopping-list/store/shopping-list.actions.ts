@@ -46,7 +46,7 @@ export class StopEditAction implements Action {
   readonly type = ShoppingListActions.stopEdit;
 }
 
-export type ShoppingListActionTypes = AddIngredientAction
+export type ShoppingListActionType = AddIngredientAction
   | UpdateIngredientAction
   | DeleteIngredientAction
   | StartEditAction

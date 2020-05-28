@@ -9,7 +9,7 @@ import {HttpClientModule} from '@angular/common/http';
 import {SharedModule} from './shared/shared.module';
 import {CoreModule} from './core.module';
 import {StoreModule} from '@ngrx/store';
-import {AppReducers} from './store';
+import {appReducer} from './store/app.reducer';
 
 @NgModule({
   declarations: [
@@ -19,7 +19,7 @@ import {AppReducers} from './store';
   imports: [
     BrowserModule,
     FormsModule,
-    StoreModule.forRoot(new AppReducers()),
+    StoreModule.forRoot(appReducer),
     HttpClientModule,
     AppRoutingModule,
     SharedModule,

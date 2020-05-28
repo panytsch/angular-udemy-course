@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {Recipe} from './recipe.model';
 import {Subject} from 'rxjs';
 import {Store} from '@ngrx/store';
-import {IAppState} from '../store';
+import {IAppState} from '../store/app.reducer';
 import {Ingredient} from '../shared/ingredient.model';
 import {AddIngredientsAction} from '../shopping-list/store/shopping-list.actions';
 

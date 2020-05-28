@@ -3,7 +3,7 @@ import {Ingredient} from '../../shared/ingredient.model';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {Subscription} from 'rxjs';
 import {Store} from '@ngrx/store';
-import {IAppState} from '../../store';
+import {IAppState} from '../../store/app.reducer';
 import {
   AddIngredientAction,
   DeleteIngredientAction,
@@ -29,7 +29,7 @@ export class ShoppingEditComponent implements OnInit, OnDestroy {
       name: new FormControl(null, Validators.required),
       amount: new FormControl(null, this.validateAmount),
     });
-    this.store.select('shoppingList').subscribe(stateData => {
+    this.indexChangedSubs = this.store.select('shoppingList').subscribe(stateData => {
       if (stateData.editedIngredientIndex < 0) {
         this.isEditMode = false;
       } else {

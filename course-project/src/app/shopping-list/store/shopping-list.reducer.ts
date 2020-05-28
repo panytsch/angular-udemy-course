@@ -1,5 +1,5 @@
 import {Ingredient} from '../../shared/ingredient.model';
-import {ShoppingListActions, ShoppingListActionTypes} from './shopping-list.actions';
+import {ShoppingListActions, ShoppingListActionType} from './shopping-list.actions';
 
 const initialState: IShoppingListState = {
   ingredients: [
@@ -11,7 +11,7 @@ const initialState: IShoppingListState = {
   editedIngredientIndex: -1
 };
 
-export function shoppingListReducer(state: IShoppingListState = initialState, action: ShoppingListActionTypes) {
+export function shoppingListReducer(state: IShoppingListState = initialState, action: ShoppingListActionType) {
   switch (action.type) {
     case ShoppingListActions.addIngredient:
       return {
