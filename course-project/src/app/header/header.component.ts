@@ -3,6 +3,9 @@ import {StaticRoutesEnum} from '../routing/routes/types';
 import {DataStorageService} from '../shared/data-storage.service';
 import {Subscription} from 'rxjs';
 import {AuthService} from '../auth/auth.service';
+import {Store} from '@ngrx/store';
+import {IAppState} from '../store/app.reducer';
+import {map} from 'rxjs/operators';
 
 @Component({
   selector: 'app-header',
@@ -15,13 +18,18 @@ export class HeaderComponent implements OnInit, OnDestroy {
   routes = StaticRoutesEnum;
 
   constructor(private dataStorageService: DataStorageService,
-              private authService: AuthService) {
+              private authService: AuthService,
+              private state: Store<IAppState>) {
   }
 
   ngOnInit(): void {
-    this.subs.push(this.authService.userUpdated.subscribe(user => {
-      this.isAuthenticated = !!user;
-    }));
+    this.subs.push(this.state.select('auth')
+      .pipe(
+        map(state => state && state.user)
+      )
+      .subscribe(user => {
+        this.isAuthenticated = !!user;
+      }));
   }
 
   onSaveRecipes(): void {

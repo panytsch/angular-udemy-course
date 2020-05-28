@@ -1,11 +1,14 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse, HttpParams} from '@angular/common/http';
 import {environment} from '../../environments/environment';
-import {BehaviorSubject, Observable, throwError} from 'rxjs';
+import {Observable, throwError} from 'rxjs';
 import {catchError, tap} from 'rxjs/operators';
 import {User} from './user.model';
 import {Router} from '@angular/router';
 import {StaticRoutesEnum} from '../routing/routes/types';
+import {Store} from '@ngrx/store';
+import {IAppState} from '../store/app.reducer';
+import {LoginAction, LogoutAction} from './store/auth.actions';
 
 @Injectable({
   providedIn: 'root'
@@ -13,11 +16,11 @@ import {StaticRoutesEnum} from '../routing/routes/types';
 export class AuthService {
   private readonly urlSignUp = 'https://identitytoolkit.googleapis.com/v1/accounts:signUp';
   private readonly urlSignIn = 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword';
-  public userUpdated = new BehaviorSubject<User>(null);
   private logoutTimer: number;
 
   constructor(private http: HttpClient,
-              private router: Router) {
+              private router: Router,
+              private store: Store<IAppState>) {
   }
 
   public signUp(email: string, password: string): Observable<SingUpResponseData> {
@@ -43,7 +46,7 @@ export class AuthService {
   }
 
   public logout = (): void => {
-    this.userUpdated.next(null);
+    this.store.dispatch(new LogoutAction());
     this.router.navigateByUrl(StaticRoutesEnum.Auth);
     this.saveUser(null);
     if (this.logoutTimer) {
@@ -58,25 +61,25 @@ export class AuthService {
 
   public autoLogin(): void {
     const loadedUser = this.getSavedUser();
-    if (!loadedUser || !loadedUser.token) {
+    if (!loadedUser) {
       return;
     }
-    this.userUpdated.next(loadedUser);
+    this.store.dispatch(new LoginAction(
+      loadedUser.email,
+      loadedUser.id,
+      loadedUser._token,
+      new Date(loadedUser._tokenExpirationDate)
+    ));
     this.autoLogout(loadedUser.tokenExpirationDate.getTime() - new Date().getTime());
   }
 
   // noinspection JSMethodCanBeStatic
-  private getSavedUser(): User | null {
+  private getSavedUser(): any {
     const userData = JSON.parse(localStorage.getItem('userData'));
     if (!userData) {
       return null;
     }
-    return new User(
-      userData.email,
-      userData.id,
-      userData._token,
-      new Date(userData._tokenExpirationDate)
-    );
+    return userData;
   }
 
   // noinspection JSMethodCanBeStatic
@@ -86,9 +89,8 @@ export class AuthService {
 
   private handleLogin = (email: string, id: string, token: string, expiresIn: number) => {
     const expTime = new Date(new Date().getTime() + expiresIn * 1000);
-    const user = new User(email, id, token, expTime);
-    this.userUpdated.next(user);
-    this.saveUser(user);
+    this.store.dispatch(new LoginAction(email, id, token, expTime));
+    this.saveUser(new User(email, id, token, expTime));
     this.autoLogout(expiresIn * 1000);
   }
 
