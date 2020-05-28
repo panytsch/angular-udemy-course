@@ -64,13 +64,14 @@ export class AuthService {
     if (!loadedUser) {
       return;
     }
+    const tokenExpirationDate = new Date(loadedUser._tokenExpirationDate);
     this.store.dispatch(new LoginAction(
       loadedUser.email,
       loadedUser.id,
       loadedUser._token,
-      new Date(loadedUser._tokenExpirationDate)
+      tokenExpirationDate
     ));
-    this.autoLogout(loadedUser.tokenExpirationDate.getTime() - new Date().getTime());
+    this.autoLogout(tokenExpirationDate.getTime() - new Date().getTime());
   }
 
   // noinspection JSMethodCanBeStatic
