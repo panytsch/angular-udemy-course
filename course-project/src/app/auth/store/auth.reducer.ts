@@ -23,13 +23,12 @@ export function authReducer(state: IAuthState = initialState, action: AuthAction
       return {
         ...state,
         user,
-        loading: true
+        loading: false
       };
     case AuthActions.Logout:
       return {
         ...state,
-        user: null,
-        loading: true
+        user: null
       };
     case AuthActions.LoginStart:
     case AuthActions.SignUpStart:
@@ -41,15 +40,14 @@ export function authReducer(state: IAuthState = initialState, action: AuthAction
     case AuthActions.ClearError:
       return {
         ...state,
-        authError: null,
-        loading: false
+        authError: null
       };
     case AuthActions.AuthenticateFail:
       return {
         ...state,
         user: null,
         authError: action.errorMessage,
-        loading: true
+        loading: false
       };
     default:
       return state;

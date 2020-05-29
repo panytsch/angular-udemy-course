@@ -16,17 +16,13 @@ export class AuthService {
               private store: Store<IAppState>) {
   }
 
-  public logout = (): void => {
-    this.clearLogoutTimer();
-    this.store.dispatch(new LogoutAction());
-  }
 
   // in milliseconds
-  public setLogoutTimer(expiration: number): void {
-    this.logoutTimer = setTimeout(this.logout, expiration);
+  public setLogoutTimer = (expiration: number): void => {
+    this.logoutTimer = setTimeout(() => this.store.dispatch(new LogoutAction()), expiration);
   }
 
-  public clearLogoutTimer(): void {
+  public clearLogoutTimer = (): void => {
     if (!this.logoutTimer) {
       return;
     }

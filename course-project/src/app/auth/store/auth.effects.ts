@@ -20,7 +20,7 @@ import {AuthService} from '../auth.service';
   providedIn: 'root'
 })
 export class AuthEffects {
-  @Effect()
+  @Effect({dispatch: false})
   authLogout: Observable<LogoutAction>;
   @Effect()
   authSignUp: Observable<AuthenticateSuccessAction | AuthenticateFailAction>;
@@ -47,7 +47,7 @@ export class AuthEffects {
       switchMap(this.sendLoginRequest)
     );
     this.authRedirect = this.actions.pipe(
-      ofType(AuthActions.AuthenticateSuccess, AuthActions.Logout),
+      ofType(AuthActions.AuthenticateSuccess),
       tap(() => {
         this.router.navigateByUrl(StaticRoutesEnum.App);
       })
@@ -58,27 +58,17 @@ export class AuthEffects {
     );
     this.authLogout = this.actions.pipe(
       ofType(AuthActions.Logout),
-      tap(() => this.saveUser(null))
+      tap(() => {
+        this.authService.clearLogoutTimer();
+        this.saveUser(null);
+        this.router.navigateByUrl(StaticRoutesEnum.Auth);
+      })
     );
     this.authAutoLogin = this.actions.pipe(
       ofType(AuthActions.AutoLogin),
-      tap(this.autoLogin)
+      map(this.autoLogin)
     );
   }
-
-  private sendSignUpRequest = (authData: SignUpStartAction) => this.http
-    .post<AuthenticationResponseData>(this.urlSignUp, {
-      email: authData.email,
-      password: authData.password,
-      returnSecureToken: true
-    }, {
-      params: new HttpParams().append('key', environment.firebaseKey)
-    })
-    .pipe(
-      catchError(this.handleError),
-      tap(resData => this.authService.setLogoutTimer(+resData * 1000)),
-      map(this.handleAuthentication)
-    )
 
   private sendLoginRequest = (authData: LoginStartAction) => this.http
     .post<AuthenticationResponseData>(this.urlSignIn, {
@@ -89,9 +79,11 @@ export class AuthEffects {
       params: new HttpParams().append('key', environment.firebaseKey)
     })
     .pipe(
-      catchError(this.handleError),
-      tap(resData => this.authService.setLogoutTimer(+resData * 1000)),
-      map(this.handleAuthentication)
+      tap((resData: AuthenticationResponseData) => {
+        this.authService.setLogoutTimer(+resData.expiresIn * 1000);
+      }),
+      map(this.handleAuthentication),
+      catchError(this.handleError)
     )
 
   private handleAuthentication = (resData: AuthenticationResponseData)
@@ -105,6 +97,22 @@ export class AuthEffects {
       expirationDate
     );
   }
+
+  private sendSignUpRequest = (authData: SignUpStartAction) => this.http
+    .post<AuthenticationResponseData>(this.urlSignUp, {
+      email: authData.email,
+      password: authData.password,
+      returnSecureToken: true
+    }, {
+      params: new HttpParams().append('key', environment.firebaseKey)
+    })
+    .pipe(
+      tap((resData: AuthenticationResponseData) => {
+        this.authService.setLogoutTimer(+resData.expiresIn * 1000);
+      }),
+      map(this.handleAuthentication),
+      catchError(this.handleError)
+    )
 
   private handleError = (err: HttpErrorResponse): Observable<AuthenticateFailAction> => {
     let error = 'Unexpected error';
@@ -121,8 +129,6 @@ export class AuthEffects {
       case 'INVALID_PASSWORD':
         error = 'Wrong password';
         break;
-      default:
-        error = 'Error happened';
     }
     return of(new AuthenticateFailAction(error));
   }
@@ -133,11 +139,15 @@ export class AuthEffects {
       return new DummyIgnoreAction();
     }
     const tokenExpirationDate = new Date(loadedUser._tokenExpirationDate);
+    const user = new User(loadedUser.email, loadedUser.id, loadedUser._token, tokenExpirationDate);
+    if (!user.token) {
+      return new DummyIgnoreAction();
+    }
     this.authService.setLogoutTimer(tokenExpirationDate.getTime() - new Date().getTime());
     return new AuthenticateSuccessAction(
-      loadedUser.email,
-      loadedUser.id,
-      loadedUser._token,
+      user.email,
+      user.id,
+      user.token,
       tokenExpirationDate
     );
   }

@@ -1,11 +1,11 @@
 import {Action} from '@ngrx/store';
 
 export enum AuthActions {
-  Logout = '[AUTH] LOGOUT',
-  AuthenticateSuccess = '[AUTH] LOGIN',
+  Logout = '[AUTH] Logout',
+  AuthenticateSuccess = '[AUTH] AuthenticateSuccess',
   AutoLogin = '[AUTH] AUTO LOGIN',
   LoginStart = '[AUTH] LOGIN Start',
-  SignUpStart = '[AUTH] Logout Start',
+  SignUpStart = '[AUTH] SignUp Start',
   AuthenticateFail = '[AUTH] LOGIN Fail',
   ClearError = '[AUTH] clear error',
   DummyIgnore = '[AUTH] ignore this action'
@@ -66,6 +66,8 @@ export class LoginStartAction implements Action {
 export type AuthActionType = LogoutAction
   | LoginStartAction
   | SignUpStartAction
+  | DummyIgnoreAction
+  | AutoLoginAction
   | AuthenticateFailAction
   | AuthenticateSuccessAction
   | ClearErrorAction
