@@ -1,16 +1,45 @@
 import {Action} from '@ngrx/store';
 
 export enum AuthActions {
-  Logout = 'LOGOUT',
-  Login = 'LOGIN',
+  Logout = '[AUTH] LOGOUT',
+  AuthenticateSuccess = '[AUTH] LOGIN',
+  AutoLogin = '[AUTH] AUTO LOGIN',
+  LoginStart = '[AUTH] LOGIN Start',
+  SignUpStart = '[AUTH] Logout Start',
+  AuthenticateFail = '[AUTH] LOGIN Fail',
+  ClearError = '[AUTH] clear error',
+  DummyIgnore = '[AUTH] ignore this action'
+}
+
+export class AutoLoginAction implements Action {
+  readonly type = AuthActions.AutoLogin;
+}
+
+export class ClearErrorAction implements Action {
+  readonly type = AuthActions.ClearError;
 }
 
 export class LogoutAction implements Action {
   readonly type = AuthActions.Logout;
 }
 
-export class LoginAction implements Action {
-  readonly type = AuthActions.Login;
+export class SignUpStartAction implements Action {
+  readonly type = AuthActions.SignUpStart;
+
+  constructor(public email: string,
+              public password: string) {
+  }
+}
+
+export class AuthenticateFailAction implements Action {
+  readonly type = AuthActions.AuthenticateFail;
+
+  constructor(public errorMessage: string) {
+  }
+}
+
+export class AuthenticateSuccessAction implements Action {
+  readonly type = AuthActions.AuthenticateSuccess;
 
   constructor(
     public email: string,
@@ -21,4 +50,23 @@ export class LoginAction implements Action {
   }
 }
 
-export type AuthActionType = LogoutAction | LoginAction;
+export class DummyIgnoreAction implements Action {
+  readonly type = AuthActions.DummyIgnore;
+}
+
+export class LoginStartAction implements Action {
+  readonly type = AuthActions.LoginStart;
+
+  constructor(
+    public email: string,
+    public password: string) {
+  }
+}
+
+export type AuthActionType = LogoutAction
+  | LoginStartAction
+  | SignUpStartAction
+  | AuthenticateFailAction
+  | AuthenticateSuccessAction
+  | ClearErrorAction
+  ;

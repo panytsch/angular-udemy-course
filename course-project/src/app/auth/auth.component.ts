@@ -3,9 +3,12 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {AuthService} from './auth.service';
 import {Subscription} from 'rxjs';
 import {Router} from '@angular/router';
-import {StaticRoutesEnum} from '../routing/routes/types';
 import {AlertComponent} from '../shared/alert/alert.component';
 import {PlaceholderDirective} from '../shared/placeholder.directive';
+import {Store} from '@ngrx/store';
+import {IAppState} from '../store/app.reducer';
+import {ClearErrorAction, LoginStartAction, SignUpStartAction} from './store/auth.actions';
+import {IAuthState} from './store/auth.reducer';
 
 @Component({
   selector: 'app-auth',
@@ -21,10 +24,10 @@ export class AuthComponent implements OnInit, OnDestroy {
   @ViewChild(PlaceholderDirective, {static: false})
   alertHost: PlaceholderDirective;
 
-
   constructor(private authService: AuthService,
               private router: Router,
-              private componentFactoryResolver: ComponentFactoryResolver) {
+              private componentFactoryResolver: ComponentFactoryResolver,
+              private store: Store<IAppState>) {
   }
 
   ngOnInit(): void {
@@ -32,6 +35,13 @@ export class AuthComponent implements OnInit, OnDestroy {
       email: new FormControl(null, [Validators.required, Validators.email]),
       password: new FormControl(null, [Validators.required, Validators.minLength(6)]),
     });
+    this.subs.push(this.store.select('auth').subscribe((state: IAuthState) => {
+      this.isLoginMode = state.loading;
+      this.error = state.authError;
+      if (this.error) {
+        this.showErrorAlert(this.error);
+      }
+    }));
   }
 
   ngOnDestroy() {
@@ -49,26 +59,15 @@ export class AuthComponent implements OnInit, OnDestroy {
     this.processing = true;
     const {email, password} = this.form.value;
     if (this.isLoginMode) {
-      this.subs.push(this.authService.login(email, password).subscribe(this.authSuccess, this.authFail));
+      this.store.dispatch(new LoginStartAction(email, password));
     } else {
-      this.subs.push(this.authService.signUp(email, password).subscribe(this.authSuccess, this.authFail));
+      this.store.dispatch(new SignUpStartAction(email, password));
     }
     this.form.reset();
   }
 
-  private authSuccess = (): void => {
-    this.processing = false;
-    this.router.navigateByUrl(StaticRoutesEnum.Recipe);
-  }
-
-  private authFail = (err: string): void => {
-    this.processing = false;
-    this.error = err;
-    this.showErrorAlert(err);
-  }
-
   onCloseAlert = () => {
-    this.error = '';
+    this.store.dispatch(new ClearErrorAction());
   }
 
   private showErrorAlert(message: string): void {

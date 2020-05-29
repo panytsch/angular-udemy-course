@@ -1,5 +1,7 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
-import {AuthService} from './auth/auth.service';
+import {Store} from '@ngrx/store';
+import {AutoLoginAction} from './auth/store/auth.actions';
+import {IAppState} from './store/app.reducer';
 
 @Component({
   selector: 'app-root',
@@ -8,10 +10,10 @@ import {AuthService} from './auth/auth.service';
   encapsulation: ViewEncapsulation.None
 })
 export class AppComponent implements OnInit {
-  constructor(private authService: AuthService) {
+  constructor(private store: Store<IAppState>) {
   }
 
   ngOnInit() {
-    this.authService.autoLogin();
+    this.store.dispatch(new AutoLoginAction());
   }
 }
