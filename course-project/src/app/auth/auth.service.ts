@@ -16,7 +16,6 @@ export class AuthService {
               private store: Store<IAppState>) {
   }
 
-
   // in milliseconds
   public setLogoutTimer = (expiration: number): void => {
     this.logoutTimer = setTimeout(() => this.store.dispatch(new LogoutAction()), expiration);
