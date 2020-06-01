@@ -1,17 +1,22 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {FormArray, FormControl, FormGroup, Validators} from '@angular/forms';
 import {RecipeService} from '../recipe.service';
 import {Recipe} from '../recipe.model';
 import {Ingredient} from '../../shared/ingredient.model';
 import {RecipeRoute, SelectedRecipeRoute} from '../../routing/routes/recipe';
+import {Store} from '@ngrx/store';
+import {IAppState} from '../../store/app.reducer';
+import {Subscription} from 'rxjs';
+import {map, tap} from 'rxjs/operators';
 
 @Component({
   selector: 'app-recipe-edit',
   templateUrl: './recipe-edit.component.html',
   styleUrls: ['./recipe-edit.component.css']
 })
-export class RecipeEditComponent implements OnInit {
+export class RecipeEditComponent implements OnInit, OnDestroy {
+  private subs: Subscription[] = [];
   form: FormGroup;
   id: number;
   recipe?: Recipe;
@@ -19,7 +24,8 @@ export class RecipeEditComponent implements OnInit {
 
   constructor(private route: ActivatedRoute,
               private router: Router,
-              private recipeService: RecipeService) {
+              private recipeService: RecipeService,
+              private store: Store<IAppState>) {
   }
 
   ngOnInit(): void {
@@ -33,11 +39,18 @@ export class RecipeEditComponent implements OnInit {
   private nextLoad = (params: Params): void => {
     this.id = +params.id;
     this.isEditMode = !!params.id;
-    this.recipe = this.recipeService.getRecipeById(this.id);
-    this.initForm();
+    // this.recipe = this.recipeService.getRecipeById(this.id);
+    this.subs.push(
+      this.store.select('recipes')
+        .pipe(
+          map(state => state.recipes.find((_, i) => i === this.id)),
+          tap(recipe => this.recipe = recipe)
+        )
+        .subscribe(this.initForm)
+    );
   }
 
-  private initForm(): void {
+  private initForm = (): void => {
     const ingredients = new FormArray([]);
     if (this.recipe && this.recipe.ingredients) {
       this.recipe.ingredients.forEach((ing: Ingredient) => ingredients.push(this.getIngredient(ing.name, ing.amount)));
@@ -90,5 +103,9 @@ export class RecipeEditComponent implements OnInit {
 
   onCancel(): void {
     this.redirectToRecipe(!this.isEditMode);
+  }
+
+  ngOnDestroy() {
+    this.subs.forEach(s => s.unsubscribe());
   }
 }
