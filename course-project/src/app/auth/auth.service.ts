@@ -9,7 +9,7 @@ import {LogoutAction} from './store/auth.actions';
   providedIn: 'root'
 })
 export class AuthService {
-  private logoutTimer: number;
+  private logoutTimer: any;
 
   constructor(private http: HttpClient,
               private router: Router,
