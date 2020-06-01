@@ -88,7 +88,8 @@ export class AuthEffects {
 
   private handleAuthentication = (resData: AuthenticationResponseData)
     : AuthenticateSuccessAction => {
-    const expirationDate = new Date(resData.expiresIn);
+    const expirationDate = new Date();
+    expirationDate.setSeconds(expirationDate.getSeconds() + +resData.expiresIn);
     this.saveUser(new User(resData.email, resData.localId, resData.idToken, expirationDate));
     return new AuthenticateSuccessAction(
       resData.email,
