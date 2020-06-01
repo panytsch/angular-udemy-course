@@ -1,7 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {FormArray, FormControl, FormGroup, Validators} from '@angular/forms';
-import {RecipeService} from '../recipe.service';
 import {Recipe} from '../recipe.model';
 import {Ingredient} from '../../shared/ingredient.model';
 import {RecipeRoute, SelectedRecipeRoute} from '../../routing/routes/recipe';
@@ -9,6 +8,7 @@ import {Store} from '@ngrx/store';
 import {IAppState} from '../../store/app.reducer';
 import {Subscription} from 'rxjs';
 import {map, tap} from 'rxjs/operators';
+import {AddRecipeAction, UpdateRecipeAction} from '../store/recipe.actions';
 
 @Component({
   selector: 'app-recipe-edit',
@@ -24,7 +24,6 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
 
   constructor(private route: ActivatedRoute,
               private router: Router,
-              private recipeService: RecipeService,
               private store: Store<IAppState>) {
   }
 
@@ -68,9 +67,9 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
       return;
     }
     if (!this.isEditMode) {
-      this.recipeService.addRecipe(this.getRecipeFromForm());
+      this.store.dispatch(new AddRecipeAction(this.getRecipeFromForm()));
     } else {
-      this.recipeService.updateRecipe(this.id, this.getRecipeFromForm());
+      this.store.dispatch(new UpdateRecipeAction(this.getRecipeFromForm(), this.id));
     }
     this.redirectToRecipe(!this.isEditMode);
   }

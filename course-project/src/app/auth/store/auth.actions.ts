@@ -45,7 +45,8 @@ export class AuthenticateSuccessAction implements Action {
     public email: string,
     public id: string,
     public token: string,
-    public tokenExpirationDate: Date
+    public tokenExpirationDate: Date,
+    public redirect: boolean
   ) {
   }
 }

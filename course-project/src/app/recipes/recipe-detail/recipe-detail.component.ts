@@ -1,6 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Recipe} from '../recipe.model';
-import {RecipeService} from '../recipe.service';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {EditRecipeRoute, RecipeRoute} from '../../routing/routes/recipe';
 import {Store} from '@ngrx/store';
@@ -8,6 +7,8 @@ import {IAppState} from '../../store/app.reducer';
 import {map} from 'rxjs/operators';
 import {Subscription} from 'rxjs';
 import {IRecipeState} from '../store/recipe.reducer';
+import {DeleteRecipeAction} from '../store/recipe.actions';
+import {AddIngredientsAction} from '../../shopping-list/store/shopping-list.actions';
 
 @Component({
   selector: 'app-recipe-detail',
@@ -20,8 +21,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
   id: number;
   editRecipeLink: string;
 
-  constructor(private recipeService: RecipeService,
-              private route: ActivatedRoute,
+  constructor(private route: ActivatedRoute,
               private router: Router,
               private store: Store<IAppState>) {
   }
@@ -44,11 +44,11 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
   }
 
   toShoppingList(): void {
-    this.recipeService.addIngredientsToShoppingList(this.recipe.ingredients);
+    this.store.dispatch(new AddIngredientsAction(this.recipe.ingredients));
   }
 
   onDelete(): void {
-    this.recipeService.deleteRecipe(this.id);
+    this.store.dispatch(new DeleteRecipeAction(this.id));
     this.router.navigateByUrl(RecipeRoute.getLink());
   }
 

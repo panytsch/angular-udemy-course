@@ -27,7 +27,7 @@ export class AuthEffects {
   @Effect()
   authLogin: Observable<AuthenticateSuccessAction | AuthenticateFailAction>;
   @Effect({dispatch: false})
-  authRedirect: Observable<AuthenticationResponseData>;
+  authRedirect: Observable<AuthenticateSuccessAction>;
   @Effect()
   authAutoLogin: Observable<AuthenticateSuccessAction | DummyIgnoreAction>;
 
@@ -48,7 +48,10 @@ export class AuthEffects {
     );
     this.authRedirect = this.actions.pipe(
       ofType(AuthActions.AuthenticateSuccess),
-      tap(() => {
+      tap((action: AuthenticateSuccessAction) => {
+        if (!action.redirect) {
+          return;
+        }
         this.router.navigateByUrl(StaticRoutesEnum.App);
       })
     );
@@ -95,7 +98,8 @@ export class AuthEffects {
       resData.email,
       resData.localId,
       resData.idToken,
-      expirationDate
+      expirationDate,
+      true
     );
   }
 
@@ -149,7 +153,8 @@ export class AuthEffects {
       user.email,
       user.id,
       user.token,
-      tokenExpirationDate
+      tokenExpirationDate,
+      false
     );
   }
 
