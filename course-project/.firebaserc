@@ -1,5 +1,14 @@
 {
   "projects": {
     "default": "angular-course-b2154"
+  },
+  "targets": {
+    "angular-course-b2154": {
+      "hosting": {
+        "course-project": [
+          "angular-course-b2154"
+        ]
+      }
+    }
   }
 }
